@@ -68,7 +68,6 @@ class Node {
 
     draw(ctx, r) { 
         ctx.fillStyle=`rgb(${this.r},${this.g},${this.b})`;
-        console.log(`x ${this.x} y ${this.y}`)
         ctx.moveTo(this.x,this.y);
         ctx.arc(this.x, this.y, r, 0, 3*3.14159);
         ctx.fill();
@@ -146,13 +145,15 @@ bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
 ctx.strokeStyle="white"
 
 let state=0;
+let showingNoOps=false;
 
 
 const nextBtn=document.getElementById('Next-Button')
+const noOpToggle=document.getElementById('No-Op-Button');
 nextBtn.addEventListener('click',advanceState);
+noOpToggle.addEventListener('click',()=>{showingNoOps=!showingNoOps;if(showingNoOps)noOpToggle.innerHTML='Hide No-Ops';else noOpToggle.innerHTML='Show No-Ops'})
 
 function draw() {
-    console.log(`state: ${state}`)
     if (state>=0) bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
     if (state >= 1) {
         bottomActLevel.forEach((node)=>node.draw(ctx,radius));
@@ -160,8 +161,14 @@ function draw() {
         drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[2],ctx,radius);
         drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[3],ctx,radius);
         drawEdge(255,255,255,bottomPropLevel[2],bottomActLevel[1],ctx,radius);
+        
     }  if (state>=2) {
         middlePropLevel.forEach((node)=>node.draw(ctx,radius));
+        if (showingNoOps) {
+            drawEdge(255,0,0,bottomPropLevel[0],middlePropLevel[0],ctx,radius);
+            drawEdge(255,0,0,bottomPropLevel[1],middlePropLevel[1],ctx,radius);
+            drawEdge(255,0,0,bottomPropLevel[2],middlePropLevel[2],ctx,radius);
+        }
         drawEdge(255,255,255,bottomActLevel[0],middlePropLevel[3],ctx,radius);
         drawEdge(255,255,255,bottomActLevel[1],middlePropLevel[4],ctx,radius);
         drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[5],ctx,radius);
@@ -177,6 +184,16 @@ function draw() {
     }
       if (state>=4) {
         finalPropLevel.forEach((node)=>node.draw(ctx,radius));
+        if (showingNoOps) {
+            drawEdge(255,0,0,middlePropLevel[0],finalPropLevel[0],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[1],finalPropLevel[1],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[2],finalPropLevel[2],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[3],finalPropLevel[3],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[4],finalPropLevel[4],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[5],finalPropLevel[5],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[6],finalPropLevel[6],ctx,radius);
+            drawEdge(255,0,0,middlePropLevel[7],finalPropLevel[7],ctx,radius);
+        }
         drawEdge(255,255,255,middleActLevel[0],finalPropLevel[3],ctx,radius);
         drawEdge(255,255,255,middleActLevel[1],finalPropLevel[4],ctx,radius);
         drawEdge(255,255,255,middleActLevel[2],finalPropLevel[5],ctx,radius);
@@ -188,7 +205,6 @@ function draw() {
 
 function advanceState() {
     state = (state + 1) % 5;
-    console.log(`state: ${state}`)
     if (state==0)nextBtn.innerHTML='Next';
     else if (state==4)nextBtn.innerHTML='Restart'
 }
