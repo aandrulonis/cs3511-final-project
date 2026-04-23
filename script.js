@@ -90,6 +90,10 @@ function drawEdge(r, g, b, node1, node2, ctx,rad) {
    ctx.stroke();
 }
 
+function drawMutex(x1,x2,y,deltay,ctx) {
+
+}
+
 
 const canvas = document.querySelector(".GraphCanvas");
 const canvasWidth = canvas.width;
@@ -146,6 +150,7 @@ ctx.strokeStyle="white"
 
 let state=0;
 let showingNoOps=false;
+let showingMutexes=false;
 
 let checkGoalState=0;
 
@@ -155,8 +160,10 @@ expl.innerHTML="We start with `clean`, `garbage`, and 'quiet' as true. The possi
 
 const nextBtn=document.getElementById('Next-Button')
 const noOpToggle=document.getElementById('No-Op-Button');
+const mutexToggle=document.getAnimations('Mutex-BUtton')
 nextBtn.addEventListener('click',advanceState);
 noOpToggle.addEventListener('click',()=>{showingNoOps=!showingNoOps;if(showingNoOps)noOpToggle.innerHTML='Hide No-Ops';else noOpToggle.innerHTML='Show No-Ops'})
+mutexToggle.addEventListener('click',()=>{showingMutexes=!showingMutexes;if(showingMutexes)mutexToggle.innerHTML='Show Mutexes';else mutexToggle.innerHTML='Hide Mutexes'})
 
 function draw() {
     if (state>=0) bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
@@ -218,11 +225,11 @@ function advanceState() {
     } else if (state==2) {
         expl.innerHTML="We now add the add and delete effects of each action."
     } else if (state==3) {
-        expl.innerHTML="As in the beginning, each possible action may be performed based on the conditions, so we again add an action level with edges connection action nodes to their corresponding preconditions."
+        expl.innerHTML="As in the beginning, each possible action may be performed based on the conditions, so we again add an action level with edges connecting action nodes to their corresponding preconditions."
     }
     else if (state==4){
         nextBtn.innerHTML='Restart'
-        expl.innerHTML="We again add the add and delete effects of each action node.We now find that the goal of 'not garb', 'dinner', and 'present' may be reached without any mutual exclusion, so the program terminates."
+        expl.innerHTML="We again add the add and delete effects of each action node.We now find that the goal of 'not garb', 'dinner', and 'present' may be reached without any mutual exclusions, so the program terminates."
     }
 }
 
