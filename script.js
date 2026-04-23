@@ -147,6 +147,11 @@ ctx.strokeStyle="white"
 let state=0;
 let showingNoOps=false;
 
+let checkGoalState=0;
+
+const expl=document.getElementById('explanation')
+expl.innerHTML="We start with `clean`, `garbage`, and 'quiet' as true. The possible actions to be taken are 'cook', 'wrap', 'carry', and 'dolly' to reach the final goal of 'not garb', 'dinner', and 'present'";
+
 
 const nextBtn=document.getElementById('Next-Button')
 const noOpToggle=document.getElementById('No-Op-Button');
@@ -205,8 +210,20 @@ function draw() {
 
 function advanceState() {
     state = (state + 1) % 5;
-    if (state==0)nextBtn.innerHTML='Next';
-    else if (state==4)nextBtn.innerHTML='Restart'
+    if (state==0){
+        nextBtn.innerHTML='Next';
+        expl.innerHTML="We start with `clean`, `garbage`, and 'quiet' as true. The possible actions to be taken are 'cook', 'wrap', 'carry', and 'dolly' to reach the final goal of 'not garb', 'dinner', and 'present'";
+    } else if (state==1) {
+        expl.innerHTML="Since all of the actions may be performed under the initial conditions, we add an action node for each action, drawing edges between the node and each of its preconditions."
+    } else if (state==2) {
+        expl.innerHTML="We now add the add and delete effects of each action."
+    } else if (state==3) {
+        expl.innerHTML="As in the beginning, each possible action may be performed based on the conditions, so we again add an action level with edges connection action nodes to their corresponding preconditions."
+    }
+    else if (state==4){
+        nextBtn.innerHTML='Restart'
+        expl.innerHTML="We again add the add and delete effects of each action node.We now find that the goal of 'not garb', 'dinner', and 'present' may be reached without any mutual exclusion, so the program terminates."
+    }
 }
 
 // Animation variables
