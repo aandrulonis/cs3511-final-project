@@ -143,32 +143,81 @@ const finalPropLevel=[
 
 ctx.font=`${canvasWidth/50}px Arial`
 bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
-bottomActLevel.forEach((node)=>node.draw(ctx,radius));
-middlePropLevel.forEach((node)=>node.draw(ctx,radius));
-middleActLevel.forEach((node)=>node.draw(ctx,radius));
-finalPropLevel.forEach((node)=>node.draw(ctx,radius));
+ctx.strokeStyle="white"
 
-drawEdge(255,255,255,bottomPropLevel[0],bottomActLevel[0],ctx,radius);
-drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[2],ctx,radius);
-drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[3],ctx,radius);
-drawEdge(255,255,255,bottomPropLevel[2],bottomActLevel[1],ctx,radius);
+let state=0;
 
-drawEdge(255,255,255,bottomActLevel[0],middlePropLevel[3],ctx,radius);
-drawEdge(255,255,255,bottomActLevel[1],middlePropLevel[4],ctx,radius);
-drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[5],ctx,radius);
-drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[6],ctx,radius);
-drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[5],ctx,radius);
-drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[7],ctx,radius);
 
-drawEdge(255,255,255,middlePropLevel[0],middleActLevel[0],ctx,radius);
-drawEdge(255,255,255,middlePropLevel[1],middleActLevel[2],ctx,radius);
-drawEdge(255,255,255,middlePropLevel[1],middleActLevel[3],ctx,radius);
-drawEdge(255,255,255,middlePropLevel[2],middleActLevel[1],ctx,radius);
+const nextBtn=document.getElementById('Next-Button')
+nextBtn.addEventListener('click',advanceState);
 
-drawEdge(255,255,255,middleActLevel[0],finalPropLevel[3],ctx,radius);
-drawEdge(255,255,255,middleActLevel[1],finalPropLevel[4],ctx,radius);
-drawEdge(255,255,255,middleActLevel[2],finalPropLevel[5],ctx,radius);
-drawEdge(255,255,255,middleActLevel[2],finalPropLevel[6],ctx,radius);
-drawEdge(255,255,255,middleActLevel[3],finalPropLevel[5],ctx,radius);
-drawEdge(255,255,255,middleActLevel[3],finalPropLevel[7],ctx,radius);
+function draw() {
+    console.log(`state: ${state}`)
+    if (state>=0) bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
+    if (state >= 1) {
+        bottomActLevel.forEach((node)=>node.draw(ctx,radius));
+        drawEdge(255,255,255,bottomPropLevel[0],bottomActLevel[0],ctx,radius);
+        drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[2],ctx,radius);
+        drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[3],ctx,radius);
+        drawEdge(255,255,255,bottomPropLevel[2],bottomActLevel[1],ctx,radius);
+    }  if (state>=2) {
+        middlePropLevel.forEach((node)=>node.draw(ctx,radius));
+        drawEdge(255,255,255,bottomActLevel[0],middlePropLevel[3],ctx,radius);
+        drawEdge(255,255,255,bottomActLevel[1],middlePropLevel[4],ctx,radius);
+        drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[5],ctx,radius);
+        drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[6],ctx,radius);
+        drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[5],ctx,radius);
+        drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[7],ctx,radius);
+    } if (state>=3) {
+        middleActLevel.forEach((node)=>node.draw(ctx,radius));
+        drawEdge(255,255,255,middlePropLevel[0],middleActLevel[0],ctx,radius);
+        drawEdge(255,255,255,middlePropLevel[1],middleActLevel[2],ctx,radius);
+        drawEdge(255,255,255,middlePropLevel[1],middleActLevel[3],ctx,radius);
+        drawEdge(255,255,255,middlePropLevel[2],middleActLevel[1],ctx,radius);
+    }
+      if (state>=4) {
+        finalPropLevel.forEach((node)=>node.draw(ctx,radius));
+        drawEdge(255,255,255,middleActLevel[0],finalPropLevel[3],ctx,radius);
+        drawEdge(255,255,255,middleActLevel[1],finalPropLevel[4],ctx,radius);
+        drawEdge(255,255,255,middleActLevel[2],finalPropLevel[5],ctx,radius);
+        drawEdge(255,255,255,middleActLevel[2],finalPropLevel[6],ctx,radius);
+        drawEdge(255,255,255,middleActLevel[3],finalPropLevel[5],ctx,radius);
+        drawEdge(255,255,255,middleActLevel[3],finalPropLevel[7],ctx,radius);
+    }
+}
 
+function advanceState() {
+    state = (state + 1) % 5;
+    console.log(`state: ${state}`)
+    if (state==0)nextBtn.innerHTML='Next';
+    else if (state==4)nextBtn.innerHTML='Restart'
+}
+
+// Animation variables
+let lastTime = 0;
+let frameCount = 0;
+let fps = 0;
+let fpsStartTime = Date.now();
+
+
+
+function animate(currentTime = 0) {
+  const deltaTime = currentTime - lastTime;
+  lastTime = currentTime;
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  update(deltaTime);
+  draw();
+  requestAnimationFrame(animate);
+}
+
+// ====================== UPDATE ======================
+function update(deltaTime) {
+  // Put all your logic here (movement, collisions, timers, etc.)
+
+  // Example:
+  // state.x += state.speed * (deltaTime / 16); // frame-rate independent
+  // state.angle += 0.02;
+}
+
+// Start the animation
+animate();
