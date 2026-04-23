@@ -74,13 +74,21 @@ class Node {
         ctx.fill();
         ctx.lineWidth=1;
         ctx.beginPath();
-        ctx.strokeText(this.text,this.x-r/4,this.y+r/4,r*.75);
+        ctx.strokeText(this.text,this.x-r*.8,this.y+r/4,r*1.5);
 
     }
 }
 
-function drawEdge(r, g, b, node1, node2, ctx) {
-   // ctx.mo
+function drawEdge(r, g, b, node1, node2, ctx,rad) {
+   const x1=node1.x;
+   const x2=node2.x;
+   const y1=node1.y-rad;
+   const y2=node2.y+rad;
+   ctx.strokeStyle=`rgb(${r},${g},${b})`;
+   ctx.beginPath();
+   ctx.moveTo(x1,y1);
+   ctx.lineTo(x2,y2);
+   ctx.stroke();
 }
 
 
@@ -89,16 +97,16 @@ const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const ctx = canvas.getContext("2d");
 
-const bottomPropY=canvasHeight*.9;
-const bottomActY=canvasHeight*.8;
-const middlePropY=canvasHeight*.7;
-const middleActY=canvasHeight*.6;
-const topPropY=canvasHeight*.5;
+const bottomPropY=canvasHeight*.8;
+const bottomActY=canvasHeight*.65;
+const middlePropY=canvasHeight*.5;
+const middleActY=canvasHeight*.35;
+const topPropY=canvasHeight*.2;
 const radius=canvasHeight/20;
 const bottomPropLevel = [
     new Node(20,200,20,canvasWidth/4,bottomPropY,"clean"),
-    new Node(200,200,20,2*canvasWidth/4,bottomPropY,"garb"),
-    new Node(200,200,20,3*canvasWidth/4,bottomPropY,"quiet"),
+    new Node(20,200,20,2*canvasWidth/4,bottomPropY,"garb"),
+    new Node(20,200,20,3*canvasWidth/4,bottomPropY,"quiet"),
 ]
 const bottomActLevel = [
     new Node(150,0,150,canvasWidth/5,bottomActY,"cook"),
@@ -133,9 +141,34 @@ const finalPropLevel=[
     new Node(150,150,150,8*canvasWidth/9,topPropY,"not quiet")
 ]
 
-
+ctx.font=`${canvasWidth/50}px Arial`
 bottomPropLevel.forEach((node)=>node.draw(ctx,radius));
 bottomActLevel.forEach((node)=>node.draw(ctx,radius));
 middlePropLevel.forEach((node)=>node.draw(ctx,radius));
 middleActLevel.forEach((node)=>node.draw(ctx,radius));
 finalPropLevel.forEach((node)=>node.draw(ctx,radius));
+
+drawEdge(255,255,255,bottomPropLevel[0],bottomActLevel[0],ctx,radius);
+drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[2],ctx,radius);
+drawEdge(255,255,255,bottomPropLevel[1],bottomActLevel[3],ctx,radius);
+drawEdge(255,255,255,bottomPropLevel[2],bottomActLevel[1],ctx,radius);
+
+drawEdge(255,255,255,bottomActLevel[0],middlePropLevel[3],ctx,radius);
+drawEdge(255,255,255,bottomActLevel[1],middlePropLevel[4],ctx,radius);
+drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[5],ctx,radius);
+drawEdge(255,255,255,bottomActLevel[2],middlePropLevel[6],ctx,radius);
+drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[5],ctx,radius);
+drawEdge(255,255,255,bottomActLevel[3],middlePropLevel[7],ctx,radius);
+
+drawEdge(255,255,255,middlePropLevel[0],middleActLevel[0],ctx,radius);
+drawEdge(255,255,255,middlePropLevel[1],middleActLevel[2],ctx,radius);
+drawEdge(255,255,255,middlePropLevel[1],middleActLevel[3],ctx,radius);
+drawEdge(255,255,255,middlePropLevel[2],middleActLevel[1],ctx,radius);
+
+drawEdge(255,255,255,middleActLevel[0],finalPropLevel[3],ctx,radius);
+drawEdge(255,255,255,middleActLevel[1],finalPropLevel[4],ctx,radius);
+drawEdge(255,255,255,middleActLevel[2],finalPropLevel[5],ctx,radius);
+drawEdge(255,255,255,middleActLevel[2],finalPropLevel[6],ctx,radius);
+drawEdge(255,255,255,middleActLevel[3],finalPropLevel[5],ctx,radius);
+drawEdge(255,255,255,middleActLevel[3],finalPropLevel[7],ctx,radius);
+
